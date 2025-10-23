@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login + Dynamic Slider</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0d0d0d, #111, #000);
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ========== LOGIN SECTION ========== */
+    .login-container {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      width: 320px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .login-container input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #00c6ff, #0072ff);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    .login-container button:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ========== SLIDER SECTION ========== */
+    .slider-section {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slider {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transform: scale(1.05);
+      transition: all 1s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.8);
+    }
+
+    .caption {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      backdrop-filter: blur(5px);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .slide.active .caption {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: white;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      padding: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+      transition: 0.3s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    #prev { left: 20px; }
+    #next { right: 20px; }
+
+    .welcome {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      font-size: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 8px 15px;
+      border-radius: 10px;
+      backdrop-filter: blur(5px);
+    }
+
+  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Image Slider</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .slide.placeholder {
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-button:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-button.prev {
+            left: 20px;
+        }
+
+        .nav-button.next {
+            right: 20px;
+        }
+
+        .dots-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        .controls {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ee3344;
+            transform: translateY(-2px);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .file-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .image-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .image-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 71, 87, 0.9);
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .image-item:hover .remove-btn {
+            opacity: 1;
+        }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .slider-container {
+                height: 300px;
+            }
+
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .control-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div class="login-container" id="login">
+    <h2>Welcome 👋</h2>
+    <input type="text" id="username" placeholder="Enter your name" />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- IMAGE SLIDER PAGE -->
+  <div class="slider-section" id="slider-section">
+    <div class="welcome" id="welcome"></div>
+    <div class="slider" id="slider"></div>
+    <button class="nav-btn" id="prev">&#10094;</button>
+    <button class="nav-btn" id="next">&#10095;</button>
+  </div>
+
+  <script>
+    // LOGIN FUNCTION
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      if (username === "") {
+        alert("Please enter your name 😅");
+        return;
+      }
+
+      document.getElementById("login").style.display = "none";
+      document.getElementById("slider-section").style.display = "block";
+      document.getElementById("welcome").textContent = `Welcome, ${username}! 🌟`;
+      startSlider();
+    }
+
+    // DYNAMIC IMAGE SLIDER FUNCTION
+    const slidesData = [
+      { img: "https://static.independent.co.uk/s3fs-public/thumbnails/image/2014/10/06/10/Cristiano-Ronaldo.jpg", caption: "Life of an Ronaldo" },
+      { img: "https://images2.minutemediacdn.com/image/upload/c_crop,w_1024,h_576,x_0,y_0/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/voltaxMediaLibrary/mmsport/si/01k3bs8fzacqkekw7936.jpg", caption: "Born: February 5, 1985, in Funchal, Madeira, Portugal" },
+      { img: "https://s.france24.com/media/display/c254fa04-074f-11ec-b901-005056bfb2b6/w:1280/p:16x9/AP090415022483.jpg", caption: "In 2003, he signed with Manchester United at just 18 years old." },
+      { img: "https://imagenes.elpais.com/resizer/v2/7EPVY3XGQQ4VOVSV2BMPT2FACI.jpg?auth=83753536defc8bb9679e27bb1a96054c5412c8b35c979f503c26ce94705fa034&width=414", caption: "He became Real Madrid’s all-time top scorer with 450+ goal" },
+      { img: "https://e01-marca.uecdn.es/assets/multimedia/imagenes/2019/07/29/15644175200560.jpg", caption: "Your love makes me strong, your hate makes me unstoppable." }
+    ];
+
+    let current = 0;
+    let interval;
+
+    function startSlider() {
+      const slider = document.getElementById("slider");
+      slidesData.forEach((data, index) => {
+        const slide = document.createElement("div");
+        slide.classList.add("slide");
+        if (index === 0) slide.classList.add("active");
+        slide.innerHTML = `
+          <img src="${data.img}" alt="slide${index}">
+          <div class="caption">${data.caption}</div>
+        `;
+        slider.appendChild(slide);
+      });
+
+      const slides = document.querySelectorAll(".slide");
+
+      function showSlide(index) {
+        slides.forEach((s, i) => s.classList.toggle("active", i === index));
+      }
+
+      function nextSlide() {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+      }
+
+      function prevSlide() {
+        current = (current - 1 + slides.length) % slides.length;
+        showSlide(current);
+      }
+
+      document.getElementById("next").addEventListener("click", nextSlide);
+      document.getElementById("prev").addEventListener("click", prevSlide);
+
+      function startAutoPlay() {
+        interval = setInterval(nextSlide, 4000);
+      }
+
+      function stopAutoPlay() {
+        clearInterval(interval);
+      }
+
+      document.getElementById("slider-section").addEventListener("mouseenter", stopAutoPlay);
+      document.getElementById("slider-section").addEventListener("mouseleave", startAutoPlay);
+
+      startAutoPlay();
+    }
+  </script>
+    <div class="container">
+        <div class="header">
+            <h1>🖼️ Dynamic Image Slider</h1>
+            <p>Upload, view, and navigate through images with smooth transitions</p>
+        </div>
+
+        <div class="slider-container">
+            <div class="slider-wrapper" id="sliderWrapper">
+                <div class="slide placeholder">
+                    <div>📷 Add images to get started</div>
+                </div>
+            </div>
+            
+            <button class="nav-button prev" id="prevBtn">‹</button>
+            <button class="nav-button next" id="nextBtn">›</button>
+            
+            <div class="dots-container" id="dotsContainer"></div>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <label for="fileInput" class="file-label">
+                    📁 Upload Images
+                </label>
+                <input type="file" id="fileInput" accept="image/*" multiple>
+                
+                <button class="btn btn-secondary" id="autoplayBtn">
+                    ▶️ Start Autoplay
+                </button>
+            </div>
+
+            <div class="status" id="status">
+                No images loaded. Upload images to begin!
+            </div>
+
+            <div class="image-list" id="imageList"></div>
+        </div>
+    </div>
+
+    <script>
+        let images = [];
+        let currentIndex = 0;
+        let autoplayInterval = null;
+        let isAutoplay = false;
+
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        const dotsContainer = document.getElementById('dotsContainer');
+        const imageList = document.getElementById('imageList');
+        const status = document.getElementById('status');
+        const fileInput = document.getElementById('fileInput');
+        const autoplayBtn = document.getElementById('autoplayBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Handle file upload
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = (event) => {
+                        images.push(event.target.result);
+                        updateSlider();
+                        updateImageList();
+                        updateStatus();
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            fileInput.value = '';
+        });
+
+        // Update slider
+        function updateSlider() {
+            if (images.length === 0) {
+                sliderWrapper.innerHTML = `
+                    <div class="slide placeholder">
+                        <div>📷 Add images to get started</div>
+                    </div>
+                `;
+                dotsContainer.innerHTML = '';
+                return;
+            }
+
+            sliderWrapper.innerHTML = images.map(img => `
+                <div class="slide">
+                    <img src="${img}" alt="Slide">
+                </div>
+            `).join('');
+
+            dotsContainer.innerHTML = images.map((_, i) => `
+                <div class="dot ${i === currentIndex ? 'active' : ''}" onclick="goToSlide(${i})"></div>
+            `).join('');
+
+            updateSlidePosition();
+        }
+
+        // Update image list
+        function updateImageList() {
+            imageList.innerHTML = images.map((img, i) => `
+                <div class="image-item">
+                    <img src="${img}" alt="Image ${i + 1}">
+                    <button class="remove-btn" onclick="removeImage(${i})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Update status
+        function updateStatus() {
+            if (images.length === 0) {
+                status.textContent = 'No images loaded. Upload images to begin!';
+            } else {
+                status.textContent = `${images.length} image${images.length > 1 ? 's' : ''} loaded | Currently viewing: ${currentIndex + 1}/${images.length}`;
+            }
+        }
+
+        // Navigation functions
+        function nextSlide() {
+            if (images.length === 0) return;
+            currentIndex = (currentIndex + 1) % images.length;
+            updateSlidePosition();
+            updateDots();
+            updateStatus();
+        }
+
+        function prevSlide() {
+            if (images.length === 0) return;
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateSlidePosition();
+            updateDots();
+            updateStatus();
+        }
+
+        function goToSlide(index) {
+            if (images.length === 0) return;
+            currentIndex = index;
+            updateSlidePosition();
+            updateDots();
+            updateStatus();
+        }
+
+        function updateSlidePosition() {
+            const offset = -currentIndex * 100;
+            sliderWrapper.style.transform = `translateX(${offset}%)`;
+        }
+
+        function updateDots() {
+            const dots = dotsContainer.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        // Remove image
+        function removeImage(index) {
+            images.splice(index, 1);
+            
+            if (currentIndex >= images.length && currentIndex > 0) {
+                currentIndex = images.length - 1;
+            }
+            
+            updateSlider();
+            updateImageList();
+            updateStatus();
+        }
+
+        // Autoplay functionality
+        function toggleAutoplay() {
+            if (images.length === 0) {
+                alert('Please add images first!');
+                return;
+            }
+
+            isAutoplay = !isAutoplay;
+            
+            if (isAutoplay) {
+                autoplayBtn.textContent = '⏸️ Stop Autoplay';
+                autoplayBtn.classList.remove('btn-secondary');
+                autoplayBtn.classList.add('btn-danger');
+                autoplayInterval = setInterval(nextSlide, 3000);
+            } else {
+                autoplayBtn.textContent = '▶️ Start Autoplay';
+                autoplayBtn.classList.remove('btn-danger');
+                autoplayBtn.classList.add('btn-secondary');
+                clearInterval(autoplayInterval);
+            }
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+        autoplayBtn.addEventListener('click', toggleAutoplay);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        sliderWrapper.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        sliderWrapper.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) prevSlide();
+        }
+    </script>
+</body>
+</html>
+</html>
